@@ -1,10 +1,11 @@
 package server;
 
 import handshake.Encoder;
-import handshake.Handler;
+import handshake.HSHandler;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import mask.Handler;
 
 /**
  *
@@ -20,19 +21,24 @@ public class Server {
                         try(BufferedReader br = new BufferedReader(isr)) {
                             try(PrintWriter pw = new PrintWriter(connection.getOutputStream(), true)) {
                                 
-                                Handler handler = new Handler();
-                                String key = handler.findKey(br);
+                                HSHandler hshandler = new HSHandler();
+                                String key = hshandler.findKey(br);
                                 System.out.println(key);
                                 Encoder encoder = new Encoder();
                                 String encodedKey = encoder.createKey(key);
                                 System.out.println(encodedKey);
                                 
+                                /* header lines from the server */
                                 pw.println("HTTP/1.1 101 Switching Protocols");
                                 pw.println("Upgrade: websocket");
                                 pw.println("Connection: upgrade");
-                                pw.println("Sec-WebSocket-Accept: " + encodedKey);
-                                
+                                pw.println("Sec-WebSocket-Accept: " + encodedKey);  
                                 pw.println(""); // End of headers
+                                
+                                try(InputStream is = connection.getInputStream()) {
+                                    Handler handler = new Handler();
+                                    handler.messageHandler(is);
+                                }
                                  
                                  pw.flush();
                             }

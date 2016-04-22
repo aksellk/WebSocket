@@ -6,15 +6,17 @@ import java.io.*;
  *
  * @author Aksel
  */
-public class Handler {
+public class HSHandler {
     
-    public Handler() {}
+    public HSHandler() {}
     
     public String findKey(BufferedReader br) throws IOException {
         String s = "";
         String key = "";
         int teller = 0;
-        while ((s = br.readLine()) != null) {
+        //while ((s = br.readLine()) != null) {
+        for (int i = 0; i < 14; i++) {
+            s = br.readLine();
             teller++;
             System.out.println(teller + " " + s);
             if (teller == 12) { // nøkkel
