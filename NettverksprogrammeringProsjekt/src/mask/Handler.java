@@ -33,13 +33,14 @@ public class Handler {
         is.read(masks,0,4); // reads 4 bytes from index indexFirstMask
         
         // decoding:
-        int indexFirstDataByte = indexFirstMask + 4; // index of first data
-        int len = length - indexFirstDataByte; // length of payload
-        byte[] decoded = new byte[len];
-        byte[] bytes = new byte[len];
+        //int indexFirstDataByte = indexFirstMask + 4; // index of first data
+        //int len = length - indexFirstDataByte; // length of payload
+       
+        byte[] decoded = new byte[length];
+        byte[] bytes = new byte[length];
         is.read(bytes);
          
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < length; i++) {
             decoded[i] = (byte) (bytes[i]^masks[i%4]); // decoded = original XOR masking-key-octet at i MOD 4
         }
         String s = new String(decoded);
