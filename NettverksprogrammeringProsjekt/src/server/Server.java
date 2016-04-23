@@ -20,6 +20,7 @@ public class Server {
                     try(InputStreamReader isr = new InputStreamReader(connection.getInputStream())) {
                         try(BufferedReader br = new BufferedReader(isr)) {
                             try(PrintWriter pw = new PrintWriter(connection.getOutputStream(), true)) {
+                                try(OutputStream os = connection.getOutputStream()) {
                                 
                                 HSHandler hshandler = new HSHandler();
                                 String key = hshandler.findKey(br);
@@ -35,10 +36,18 @@ public class Server {
                                 pw.println("Sec-WebSocket-Accept: " + encodedKey);  
                                 pw.println(""); // End of headers
                                 
-                                try(InputStream is = connection.getInputStream()) {
-                                    Handler handler = new Handler();
-                                    handler.messageHandler(is);
+                                Handler handler = new Handler();
+                                byte[] raw = null;
+                                try(InputStream is = connection.getInputStream()) {                                   
+                                    raw = handler.decodeMessage(is);
+                                    byte[] message = handler.sendMessage(raw);                             
+                                    os.write(message);
                                 }
+
+                                
+                                
+                                }
+                                
                                  
                                  pw.flush();
                             }
