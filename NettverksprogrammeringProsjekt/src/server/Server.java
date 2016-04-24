@@ -5,7 +5,8 @@ import handshake.HSHandler;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import mask.Handler;
+import communication.Handler;
+import java.util.ArrayList;
 
 /**
  *
@@ -19,6 +20,7 @@ public class Server {
                 try(Socket connection = ss.accept()) {
                     try(InputStreamReader isr = new InputStreamReader(connection.getInputStream())) {
                         try(BufferedReader br = new BufferedReader(isr)) {
+                         
                             try(PrintWriter pw = new PrintWriter(connection.getOutputStream(), true)) {
                                 try(OutputStream os = connection.getOutputStream()) {
                                 
@@ -36,20 +38,24 @@ public class Server {
                                 pw.println("Sec-WebSocket-Accept: " + encodedKey);  
                                 pw.println(""); // End of headers
                                 
+                                
                                 Handler handler = new Handler();
                                 byte[] raw = null;
-                                try(InputStream is = connection.getInputStream()) {                                   
-                                    raw = handler.decodeMessage(is);
-                                    byte[] message = handler.sendMessage(raw);                             
-                                    os.write(message);
+                                try(InputStream is = connection.getInputStream()) {  
+                                    boolean conn = true;
+                                    while (conn) {
+                                    conn = handler.decodeMessage(is,os);
+                                    //raw = handler.decodeMessage(is,os);
+                                    //byte[] message = handler.sendMessage(raw);                             
+                                    //os.write(message);
+                                    pw.flush();
+                                    }
                                 }
-
-                                
-                                
                                 }
                                 
                                  
-                                 pw.flush();
+                                 //pw.flush();
+                                 
                             }
                         }
                     }

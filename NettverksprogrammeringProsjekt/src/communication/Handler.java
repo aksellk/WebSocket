@@ -1,4 +1,4 @@
-package mask;
+package communication;
 
 import java.io.*;
 
@@ -8,11 +8,55 @@ import java.io.*;
  */
 public class Handler {
         
-    public byte[] decodeMessage(InputStream is) throws IOException {
+    //public byte[] decodeMessage(InputStream is, OutputStream os) throws IOException {
+    public boolean decodeMessage(InputStream is, OutputStream os) throws IOException {
         
         byte[] b1 = new byte[1];
-        byte[] b2 = new byte[1];
         is.read(b1);
+        byte firstByte = b1[0];
+        byte fin = (byte) ((byte) (firstByte >> 7) & 0x1);
+        //byte o = (byte) (firstByte & 00001111);
+        byte opcode = (byte) (firstByte & 0xF);
+        //return decodeTextFrame(is,os);
+         //decodeTextFrame(is,os);
+        return handleMessage(is,os,opcode);
+        
+    }
+    
+    public boolean handleMessage(InputStream is,OutputStream os,byte opcode) throws IOException {
+        boolean conn = false;
+        switch(opcode){
+            case 0 : // contuation frame
+                conn = true;
+                break;
+                
+            case 1 : // text
+                byte[] raw = decodeTextFrame(is);
+                byte[] message = createMessage(raw);
+                os.write(message);
+                conn = true;
+                break;
+            case 8 : // close
+                is.close();
+                byte[] close = createCloseMessage();
+                os.write(close);
+                os.close();
+                break;
+            default :
+                break;
+        }
+        return conn;
+    }
+    
+    public byte[] createCloseMessage() {
+        byte[] close = new byte[1];
+        int code = 1001;
+        close[0] = (byte) code;
+        return close;
+    }
+    
+    public byte[] decodeTextFrame(InputStream is) throws IOException  {
+        byte[] b2 = new byte[1];
         is.read(b2);
         
         byte secondbyte = b2[0];
@@ -48,18 +92,21 @@ public class Handler {
         String s = new String(decoded);
         System.out.println(s);
         return decoded;
+        
     }
+        
     
-    public byte[] sendMessage(byte[] raw) {
+    public byte[] createMessage(byte[] raw) {
         byte[] message = new byte[raw.length + 2];
         message[0] = (byte)129; //type of data
         int indexStartRawData = -1; // before set
-        if(raw.length <= 125) {
+        
+        if(raw.length <= 125) { // vanlig lengde
             System.out.println("vanlig lengde");
             message[1] = (byte)raw.length;
             indexStartRawData = 2;
         }
-        else if (raw.length >= 126 && raw.length <= 65535) {
+        else if (raw.length >= 126 && raw.length <= 65535) { //spesialtilfelle 1
             System.out.println("lengde 16bit unsigned int");
             message[1] = 126;
             message[2] = (byte) ((raw.length >> 8) & 255);
