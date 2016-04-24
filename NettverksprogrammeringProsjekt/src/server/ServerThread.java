@@ -1,23 +1,38 @@
 package server;
 
+import communication.Handler;
 import handshake.Encoder;
 import handshake.HSHandler;
-import java.io.*;
-import java.net.ServerSocket;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
-import communication.Handler;
 
 /**
  *
  * @author Aksel
  */
-public class Server {
-
-    public static void main(String[] args) throws IOException {
-        try(ServerSocket ss = new ServerSocket(80)) {
-            
-                try(Socket connection = ss.accept()) {
-                    try(InputStreamReader isr = new InputStreamReader(connection.getInputStream())) {
+public class ServerThread extends Thread {
+    private Socket connection;
+    
+    public ServerThread(Socket connection) {
+        this.connection = connection;
+    }
+    
+    @Override
+    public void run() {
+        try {
+            handle();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
+    
+    public void handle() throws Exception {
+                     try(InputStreamReader isr = new InputStreamReader(connection.getInputStream())) {
                         try(BufferedReader br = new BufferedReader(isr)) {
                          
                             try(PrintWriter pw = new PrintWriter(connection.getOutputStream(), true)) {
@@ -58,11 +73,5 @@ public class Server {
                             }
                         }
                     }
-                }
-               
-           
-       }
-        
     }
-    
 }
