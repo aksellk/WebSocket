@@ -38,12 +38,12 @@ public class Server {
                                 pw.println(""); // End of headers
                                 
                                 
-                                MessageHandler handler = new MessageHandler();
+                                //MessageHandler handler = new MessageHandler();
                                 //byte[] raw = null;
                                 try(InputStream is = connection.getInputStream()) {  
                                     boolean conn = true;
                                     while (conn) {
-                                    conn = handler.decodeMessage(is,os);
+                                    //conn = handler.decodeMessage(is,os);
                                     //raw = handler.decodeMessage(is,os);
                                     //byte[] message = handler.sendMessage(raw);                             
                                     //os.write(message);

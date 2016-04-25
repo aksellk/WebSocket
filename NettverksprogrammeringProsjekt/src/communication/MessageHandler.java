@@ -9,6 +9,16 @@ import java.io.*;
 public class MessageHandler {
     
     private byte[] message = null;
+    private Message m;
+    
+    public MessageHandler() {
+        this.m = new Message();
+    }
+
+    public Message getM() {
+        return m;
+    }
+    
 
     public byte[] getMessage() {
         return message;
@@ -17,8 +27,9 @@ public class MessageHandler {
     public void setMessage(byte[] message) {
         this.message = message;
     }
+    
+    
         
-    //public byte[] decodeMessage(InputStream is, OutputStream os) throws IOException {
     public boolean decodeMessage(InputStream is, OutputStream os) throws IOException {
         
         byte[] b1 = new byte[1];
@@ -32,7 +43,7 @@ public class MessageHandler {
         
     }
     
-    public boolean handleMessage(InputStream is,OutputStream os,int opcode) throws IOException {
+    public boolean handleMessage(InputStream is, OutputStream os,int opcode) throws IOException {
         boolean conn = true;
         switch(opcode){
             case 0 : // contuation frame
@@ -41,9 +52,11 @@ public class MessageHandler {
                 
             case 1 : // text
                 byte[] raw = decodeTextFrame(is);
-                byte[] message = createMessage(raw);
+                byte[] message = m.createMessage(raw);
                 //os.write(message);
+                //os.write(createPing());
                 setMessage(message);
+                
                 break;
             case 8 : // close
                 is.close();
@@ -52,23 +65,19 @@ public class MessageHandler {
                 os.close();
                 conn = false;
                 break;
-            case 9 : //ping
-                
-                break;
-            case 10 : // pong
+            
+            case 10 : // recieves pong
+                System.out.println("PONG!");
                 break;
             default :
                 break;
         }
         return conn;
     }
-    /*
-    public byte[] createCloseMessage() {
-        byte[] close = new byte[1];
-        int code = 1001;
-        close[0] = (byte) code;
-        return close;
-    }*/
+    
+    
+    
+    
     
     public byte[] decodeTextFrame(InputStream is) throws IOException  {
         byte[] b2 = new byte[1];
@@ -107,36 +116,9 @@ public class MessageHandler {
         String s = new String(decoded);
         System.out.println(s);
         return decoded;
-        
     }
-        
     
-    public byte[] createMessage(byte[] raw) {
-        byte[] message = new byte[raw.length + 2];
-        message[0] = (byte)129; //type of data
-        int indexStartRawData = -1; // before set
-        
-        if(raw.length <= 125) { // vanlig lengde
-            System.out.println("vanlig lengde");
-            message[1] = (byte)raw.length;
-            indexStartRawData = 2;
-        }
-        else if (raw.length >= 126 && raw.length <= 65535) { //spesialtilfelle 1
-            System.out.println("lengde 16bit unsigned int");
-            message[1] = 126;
-            message[2] = (byte) ((raw.length >> 8) & 255);
-            message[3] = (byte) ((raw.length) & 255);
-            indexStartRawData = 4;
-        }
-        
-        int j = indexStartRawData;
-        for (int i = 0; i < raw.length; i++) {
-            message[j] = raw[i];
-            j++;
-        }
-        String s = new String(message);
-        System.out.println(s);
-        return message;
-    }
+     
+    
     
 }

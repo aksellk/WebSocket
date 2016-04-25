@@ -20,10 +20,11 @@ public class Handler {
         return id;
     }
     
-    public void handle(Socket connection,OutputStream os) throws Exception {
-        MessageHandler handler = new MessageHandler();
-        Main main = new Main();
+    public void handle(Socket connection,OutputStream os) throws Exception {    
+        
         try(InputStream is = connection.getInputStream()) {  
+            MessageHandler handler = new MessageHandler();
+            Main main = new Main();
             boolean conn = true;
             while (conn) {
                  conn = handler.decodeMessage(is,os);
