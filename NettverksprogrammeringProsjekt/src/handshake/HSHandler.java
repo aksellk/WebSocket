@@ -1,33 +1,30 @@
+
 package handshake;
 
 import java.io.*;
-
 /**
  *
  * @author Aksel
  */
 public class HSHandler {
     
-    public HSHandler() {}
-    
-    public String findKey(BufferedReader br) throws IOException {
-        String s = "";
-        String key = "";
-        int teller = 0;
-        //while ((s = br.readLine()) != null) {
-        for (int i = 0; i < 14; i++) {
-            s = br.readLine();
-            teller++;
-            System.out.println(teller + " " + s);
-            if (teller == 12) { // nøkkel
-                key = s;
-            }
+    public void handle(BufferedReader br, PrintWriter pw) {
+        try {
+            HSMessage hshandler = new HSMessage();
+            String key = hshandler.findKey(br);
+            System.out.println(key);
+            Encoder encoder = new Encoder();
+            String encodedKey = encoder.createKey(key);
+            System.out.println(encodedKey);
+
+            /* header lines from the server */
+            pw.println("HTTP/1.1 101 Switching Protocols");
+            pw.println("Upgrade: websocket");
+            pw.println("Connection: upgrade");
+            pw.println("Sec-WebSocket-Accept: " + encodedKey);  
+            pw.println(""); // End of headers
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return getKey(key);
-    }
-    
-    public String getKey(String hline) {
-        String key = hline.substring(19);
-        return key;
     }
 }

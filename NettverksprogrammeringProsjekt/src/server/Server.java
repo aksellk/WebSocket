@@ -1,11 +1,11 @@
 package server;
 
 import handshake.Encoder;
-import handshake.HSHandler;
+import handshake.HSMessage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import communication.Handler;
+import communication.MessageHandler;
 
 /**
  *
@@ -23,7 +23,7 @@ public class Server {
                             try(PrintWriter pw = new PrintWriter(connection.getOutputStream(), true)) {
                                 try(OutputStream os = connection.getOutputStream()) {
                                 
-                                HSHandler hshandler = new HSHandler();
+                                HSMessage hshandler = new HSMessage();
                                 String key = hshandler.findKey(br);
                                 System.out.println(key);
                                 Encoder encoder = new Encoder();
@@ -38,8 +38,8 @@ public class Server {
                                 pw.println(""); // End of headers
                                 
                                 
-                                Handler handler = new Handler();
-                                byte[] raw = null;
+                                MessageHandler handler = new MessageHandler();
+                                //byte[] raw = null;
                                 try(InputStream is = connection.getInputStream()) {  
                                     boolean conn = true;
                                     while (conn) {
@@ -51,6 +51,15 @@ public class Server {
                                     }
                                 }
                                 }
+                                
+                                 
+                                 //pw.flush();
+                                
+                                 
+                                 //pw.flush();
+                                
+                                 
+                                 //pw.flush();
                                 
                                  
                                  //pw.flush();

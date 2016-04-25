@@ -1,13 +1,9 @@
 package server;
 
 import communication.Handler;
-import handshake.Encoder;
 import handshake.HSHandler;
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -16,6 +12,50 @@ import java.net.Socket;
  */
 public class ServerThread extends Thread {
     private Socket connection;
+    private InputStreamReader isr;
+    private BufferedReader br;
+    private PrintWriter pw; 
+    private OutputStream os;
+
+    public Socket getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Socket connection) {
+        this.connection = connection;
+    }
+
+    public InputStreamReader getIsr() {
+        return isr;
+    }
+
+    public void setIsr(InputStreamReader isr) {
+        this.isr = isr;
+    }
+
+    public BufferedReader getBr() {
+        return br;
+    }
+
+    public void setBr(BufferedReader br) {
+        this.br = br;
+    }
+
+    public PrintWriter getPw() {
+        return pw;
+    }
+
+    public void setPw(PrintWriter pw) {
+        this.pw = pw;
+    }
+
+    public OutputStream getOs() {
+        return os;
+    }
+
+    public void setOs(OutputStream os) {
+        this.os = os;
+    }
     
     public ServerThread(Socket connection) {
         this.connection = connection;
@@ -31,47 +71,57 @@ public class ServerThread extends Thread {
         
     }
     
-    public void handle() throws Exception {
-                     try(InputStreamReader isr = new InputStreamReader(connection.getInputStream())) {
-                        try(BufferedReader br = new BufferedReader(isr)) {
-                         
-                            try(PrintWriter pw = new PrintWriter(connection.getOutputStream(), true)) {
-                                try(OutputStream os = connection.getOutputStream()) {
-                                
-                                HSHandler hshandler = new HSHandler();
-                                String key = hshandler.findKey(br);
-                                System.out.println(key);
-                                Encoder encoder = new Encoder();
-                                String encodedKey = encoder.createKey(key);
-                                System.out.println(encodedKey);
-                                
-                                /* header lines from the server */
-                                pw.println("HTTP/1.1 101 Switching Protocols");
-                                pw.println("Upgrade: websocket");
-                                pw.println("Connection: upgrade");
-                                pw.println("Sec-WebSocket-Accept: " + encodedKey);  
-                                pw.println(""); // End of headers
-                                
-                                
-                                Handler handler = new Handler();
-                                byte[] raw = null;
-                                try(InputStream is = connection.getInputStream()) {  
-                                    boolean conn = true;
-                                    while (conn) {
-                                    conn = handler.decodeMessage(is,os);
-                                    //raw = handler.decodeMessage(is,os);
-                                    //byte[] message = handler.sendMessage(raw);                             
-                                    //os.write(message);
-                                    pw.flush();
-                                    }
-                                }
-                                }
-                                
-                                 
-                                 //pw.flush();
-                                 
-                            }
-                        }
-                    }
+    public void OnMessage(byte[] message) {
+        try {
+            getOs().write(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
     }
+   
+    
+    public void handle() throws Exception {
+        try {
+        // open connections
+        open();
+
+        /* Handshake */
+        HSHandler hshandler = new HSHandler();
+        hshandler.handle(getBr(), getPw());       
+
+        /* Handle messages */
+        Handler handler = new Handler();
+        handler.handle(getConnection(),getOs());
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+             // close connections
+            close();
+        }
+    }
+
+     public void open() {
+        try {
+            setIsr(new InputStreamReader(getConnection().getInputStream()));
+            setBr(new BufferedReader(getIsr()));
+            setPw(new PrintWriter(getConnection().getOutputStream(), true));
+            setOs(getConnection().getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }  
+    }        
+    
+    public void close() {
+        try {
+            getIsr().close();
+            getOs().close();
+            getPw().close();
+            getBr().close();
+            getIsr().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }   
+    }
+    
 }

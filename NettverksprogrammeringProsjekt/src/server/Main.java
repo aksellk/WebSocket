@@ -10,9 +10,11 @@ import java.util.ArrayList;
  */
 public class Main {
     
+    public static ArrayList<ServerThread> list;
+    
     public static void main(String[] args) throws Exception {
         try(ServerSocket ss = new ServerSocket(80)) {
-            ArrayList<Thread> list = new ArrayList<Thread>();
+            list = new ArrayList<ServerThread>();
             boolean run = true;
             try {               
             
@@ -27,10 +29,16 @@ public class Main {
                 e.printStackTrace();  
             }
             finally {
-                for (Thread t : list) {
+                for (ServerThread t : list) {
                     t.join();
                 }
             }
+        }
+    }
+    
+    public synchronized void OnMessage(byte[] message) {
+        for(ServerThread t: list) {
+            t.OnMessage(message);
         }
     }
     
