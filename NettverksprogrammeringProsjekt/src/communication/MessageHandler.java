@@ -27,14 +27,13 @@ public class MessageHandler {
         byte fin = (byte) ((byte) (firstByte >> 7) & 0x1);
         //byte o = (byte) (firstByte & 00001111);
         byte opcode = (byte) (firstByte & 0xF);
-        //return decodeTextFrame(is,os);
-         //decodeTextFrame(is,os);
-        return handleMessage(is,os,opcode);
+        int oc = opcode;
+        return handleMessage(is,os,oc);
         
     }
     
-    public boolean handleMessage(InputStream is,OutputStream os,byte opcode) throws IOException {
-        boolean conn = false;
+    public boolean handleMessage(InputStream is,OutputStream os,int opcode) throws IOException {
+        boolean conn = true;
         switch(opcode){
             case 0 : // contuation frame
                 conn = true;
@@ -45,13 +44,18 @@ public class MessageHandler {
                 byte[] message = createMessage(raw);
                 //os.write(message);
                 setMessage(message);
-                conn = true;
                 break;
             case 8 : // close
                 is.close();
                 //byte[] close = createCloseMessage();
                 //os.write(close);
                 os.close();
+                conn = false;
+                break;
+            case 9 : //ping
+                
+                break;
+            case 10 : // pong
                 break;
             default :
                 break;

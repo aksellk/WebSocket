@@ -16,6 +16,11 @@ public class ServerThread extends Thread {
     private BufferedReader br;
     private PrintWriter pw; 
     private OutputStream os;
+    
+    public ServerThread(Socket connection) {
+        this.connection = connection;
+    }
+
 
     public Socket getConnection() {
         return connection;
@@ -57,9 +62,7 @@ public class ServerThread extends Thread {
         this.os = os;
     }
     
-    public ServerThread(Socket connection) {
-        this.connection = connection;
-    }
+    
     
     @Override
     public void run() {
@@ -82,21 +85,21 @@ public class ServerThread extends Thread {
     
     public void handle() throws Exception {
         try {
-        // open connections
-        open();
+            /* open connections */
+            open();
 
-        /* Handshake */
-        HSHandler hshandler = new HSHandler();
-        hshandler.handle(getBr(), getPw());       
+            /* Handshake */
+            HSHandler hshandler = new HSHandler();
+            hshandler.handle(getBr(), getPw());       
 
-        /* Handle messages */
-        Handler handler = new Handler();
-        handler.handle(getConnection(),getOs());
+            /* Handle messages */
+            Handler handler = new Handler(this.getId());
+            handler.handle(getConnection(),getOs());
         
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-             // close connections
+             /* close connections */
             close();
         }
     }

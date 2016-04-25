@@ -42,4 +42,10 @@ public class Main {
         }
     }
     
+    public synchronized void removeThread(long thread_id) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId() == thread_id) list.remove(i);
+        }
+    }
+    
 }

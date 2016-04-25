@@ -10,6 +10,16 @@ import server.Main;
  */
 public class Handler {
     
+    private long id;
+    
+    public Handler(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
+    
     public void handle(Socket connection,OutputStream os) throws Exception {
         MessageHandler handler = new MessageHandler();
         Main main = new Main();
@@ -18,10 +28,14 @@ public class Handler {
             while (conn) {
                  conn = handler.decodeMessage(is,os);
                  byte[] message = handler.getMessage();
+                 if (!conn) {
+                     main.removeThread(getId());
+                 }
                  if (message != null) {
                      handler.setMessage(null);
                      main.OnMessage(message); 
                  }
+                 
             }
         }
     }
