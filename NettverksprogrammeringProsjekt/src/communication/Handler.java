@@ -37,8 +37,8 @@ public class Handler {
         try(InputStream is = connection.getInputStream()) {  
 
             boolean conn = true;
-            //os.write(handler.getM().createPing());
-            //handler.decodeMessage(is, os);
+            //os.write(getHandler().getM().createPing()); // sends PING to client
+            //getHandler().decodeMessage(is, os); // recieve and interpret PONG from client
             while (conn) {
                  conn = getHandler().decodeMessage(is,os);
                  byte[] message = getHandler().getMessage();

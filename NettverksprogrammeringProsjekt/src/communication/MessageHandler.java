@@ -44,7 +44,6 @@ public class MessageHandler {
         byte firstByte = b1[0];
         byte fin = (byte) ((byte) (firstByte >> 7) & 0x1);
         int FIN = fin;
-        //byte o = (byte) (firstByte & 00001111);
         byte opcode = (byte) (firstByte & 0xF);
         int oc = opcode;
         return handleMessage(is,os,oc);
@@ -52,32 +51,35 @@ public class MessageHandler {
     }
     
     public boolean handleMessage(InputStream is, OutputStream os,int opcode) throws IOException {
+        byte[] raw = null;
+        byte[] message = null;
         boolean conn = true;
         switch(opcode){
             case CONTINUATION_FRAME : // continuation frame
-                System.out.println("continuation frame");
-                conn = true;
+                System.out.println("continuation frame recieved");
+                raw = decodeTextFrame(is);
+                message = m.createMessage(raw,false);
+                setMessage(message);
                 break;
                 
             case TEXT_FRAME : // text
-                System.out.println("text frame: ");
-                byte[] raw = decodeTextFrame(is);
-                byte[] message = m.createMessage(raw);
+                System.out.println("text frame recieved");
+                raw = decodeTextFrame(is);
+                message = m.createMessage(raw,true);
                 //os.write(message);
                 //os.write(createPing());
                 setMessage(message);
                 
                 break;
             case CLOSE : // close
+                System.out.println("close frame recieved");
                 is.close();
-                //byte[] close = createCloseMessage();
-                //os.write(close);
                 os.close();
                 conn = false;
                 break;
             
             case PONG : // recieves pong
-                System.out.println("PONG!");
+                System.out.println("PONG recieved");
                 break;
             default :
                 break;
@@ -118,9 +120,6 @@ public class MessageHandler {
         is.read(masks,0,4); // reads 4 bytes from index indexFirstMask
         
         // decoding:
-        //int indexFirstDataByte = indexFirstMask + 4; // index of first data
-        //int len = length - indexFirstDataByte; // length of payload
-       
         byte[] decoded = new byte[(int)length];
         byte[] bytes = new byte[(int)length];
         is.read(bytes);
