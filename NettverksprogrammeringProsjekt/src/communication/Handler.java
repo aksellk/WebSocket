@@ -26,6 +26,8 @@ public class Handler {
             MessageHandler handler = new MessageHandler();
             Main main = new Main();
             boolean conn = true;
+            //os.write(handler.getM().createPing());
+            //handler.decodeMessage(is, os);
             while (conn) {
                  conn = handler.decodeMessage(is,os);
                  byte[] message = handler.getMessage();

@@ -15,17 +15,20 @@ public class Message {
     }
     
     public byte[] createMessage(byte[] raw) {
-        byte[] message = new byte[raw.length + 2];
-        message[0] = (byte)129; //type of data
+        byte[] message = null;
         int indexStartRawData = -1; // before set
         
         if(raw.length <= 125) { // vanlig lengde
             System.out.println("vanlig lengde");
+            message = new byte[raw.length + 2];
+            message[0] = (byte)129; //type of data
             message[1] = (byte)raw.length;
             indexStartRawData = 2;
         }
         else if (raw.length >= 126 && raw.length <= 65535) { //spesialtilfelle 1
             System.out.println("lengde 16bit unsigned int");
+            message = new byte[raw.length + 4];
+            message[0] = (byte)129; //type of data
             message[1] = 126;
             message[2] = (byte) ((raw.length >> 8) & 255);
             message[3] = (byte) ((raw.length) & 255);
