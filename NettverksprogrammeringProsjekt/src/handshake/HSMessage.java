@@ -23,7 +23,7 @@ public class HSMessage {
      * Finds the key from the HTTP-get-Request from the client
      * 
      * @return the WebSocket key
-     * @throws IOException 
+     * @throws IOException if an IO-error occurs
      */
     public String findKey() throws IOException {
         String w = "Sec-WebSocket-Key"; // search-word

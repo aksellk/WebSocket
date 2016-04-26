@@ -19,8 +19,8 @@ public class Encoder {
     /**
      * Encodes the given key unsing base64 and the SHA-1 hashing-algorithm
      * 
-     * @param key
-     * @return 
+     * @param key the key from the client
+     * @return the encoded key
      */
     public String createKey(String key) {
              MessageDigest md = null;

@@ -18,8 +18,8 @@ public class Main {
      * Initializes a ServerSocket on port 80
      * Creates one thread for each client 
      * 
-     * @param args
-     * @throws Exception 
+     * @param args String-array
+     * @throws Exception if an error occurs
      */
     public static void main(String[] args) throws Exception {
         try(ServerSocket ss = new ServerSocket(80)) {

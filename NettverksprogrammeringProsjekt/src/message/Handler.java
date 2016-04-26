@@ -43,9 +43,9 @@ public class Handler {
      * the message field is then set to null 
      * 
      * @param connection The socket which contains the InputStream with the messages from the client
-     * @throws Exception 
+     * @throws IOException if an IO-error occurs
      */
-    public void handle(Socket connection) throws Exception {    
+    public void handle(Socket connection) throws IOException {    
         
         try(InputStream is = connection.getInputStream()) {  
 

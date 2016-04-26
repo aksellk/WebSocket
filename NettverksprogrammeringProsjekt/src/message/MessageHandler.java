@@ -45,7 +45,7 @@ public class MessageHandler {
      * @return 
      *      false if a close-frame is recieved
      *      true if a close-frame is not recieved
-     * @throws IOException 
+     * @throws IOException if an IO-error occurs
      */  
     public boolean decodeMessage(InputStream is) throws IOException {     
         byte[] b1 = new byte[1]; 
@@ -78,7 +78,7 @@ public class MessageHandler {
      * @param is InputStream which contains the message from the client
      * @param opcode the opcode which speciefies the type of message from the client
      * @return false if a close-frame is recieved, otherwise true
-     * @throws IOException 
+     * @throws IOException if an IO-error occurs
      */
     public boolean handleMessage(InputStream is,int opcode) throws IOException {
         byte[] raw = null;
@@ -130,7 +130,7 @@ public class MessageHandler {
      * 
      * @param is InputStream which contains the message from the client
      * @return a byte-array containing the payload
-     * @throws IOException 
+     * @throws IOException if an IO-error occurs
      */
     public byte[] decodeTextFrame(InputStream is) throws IOException  {
         byte[] b2 = new byte[1];

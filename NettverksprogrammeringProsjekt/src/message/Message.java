@@ -20,7 +20,7 @@ public class Message {
      * If the length of the payload is between 126 and 65535 the second and third byte is the length of the payload
      * 
      * @param raw the payload
-     * @param 
+     * @param fin 
      *      - true if the FIN-flag is set
      *      - false if the FIN-flag is not set
      * @return the message which will get sent to the client
