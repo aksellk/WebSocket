@@ -3,22 +3,34 @@ package handshake;
 import java.io.*;
 
 /**
- *
+ * Finds the WebSocket key in the GET-request from the client
+ * 
  * @author Aksel
  */
 public class HSMessage {
     
-    public HSMessage() {}
+    private BufferedReader br;
     
-    public String findKey(BufferedReader br) throws IOException {
-        String w = "Sec-WebSocket-Key";
-        CharSequence seq = w.subSequence(0,16);
+    public HSMessage(BufferedReader br) {
+        this.br = br;
+    }
+
+    public BufferedReader getBr() {
+        return br;
+    }
+    
+    /**
+     * Finds the key from the HTTP-get-Request from the client
+     * 
+     * @return the WebSocket key
+     * @throws IOException 
+     */
+    public String findKey() throws IOException {
+        String w = "Sec-WebSocket-Key"; // search-word
+        CharSequence seq = w.subSequence(0,16); 
         String s = "";
         String key = "";
-        //int teller = 0;
-        while ((s = br.readLine()) != null && (!(s = br.readLine()).equals(""))) {
-            //teller++;
-            //System.out.println(teller + " " + s);
+        while ((s = getBr().readLine()) != null && (!(s = getBr().readLine()).equals(""))) {
             if (s.contains(seq)) {
                 key = s;
             }
@@ -26,8 +38,13 @@ public class HSMessage {
         return getKey(key);
     }
     
+    /**
+     * Retrieves the WebSocket key from the HTTP-headerline containing the key
+     * @param hline the HTTP-headerline containing the key
+     * @return the WebSocket key
+     */
     public String getKey(String hline) {
-        String key = hline.substring(19);
+        String key = hline.substring(19); // 19 is always the char-position where the key start in the headerline
         return key;
     }
 }
