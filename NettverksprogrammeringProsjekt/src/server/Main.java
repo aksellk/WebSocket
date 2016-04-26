@@ -32,6 +32,7 @@ public class Main {
             }
             finally {
                 for (ServerThread t : list) {
+                    t.OnClose(); // sender closing-handshake
                     t.join();
                 }
                 for (ServerThread t : trash) {

@@ -16,9 +16,21 @@ public class ServerThread extends Thread {
     private BufferedReader br;
     private PrintWriter pw; 
     private OutputStream os;
+    private HSHandler hshandler;
+    private Handler handler;
     
     public ServerThread(Socket connection) {
         this.connection = connection;
+        this.hshandler = new HSHandler();
+        this.handler = new Handler(this.getId());
+    }
+
+    public HSHandler getHshandler() {
+        return hshandler;
+    }
+
+    public Handler getHandler() {
+        return handler;
     }
 
 
@@ -81,7 +93,18 @@ public class ServerThread extends Thread {
             e.printStackTrace();
         } 
     }
-   
+    
+    public void OnClose() {
+        try {
+            byte[] close = getHandler().close();
+            getOs().write(close);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        
+    }
+    
     
     public void handle() throws Exception {
         try {
@@ -89,12 +112,10 @@ public class ServerThread extends Thread {
             open();
 
             /* Handshake */
-            HSHandler hshandler = new HSHandler();
-            hshandler.handle(getBr(), getPw());       
+            getHshandler().handle(getBr(), getPw());       
 
             /* Handle messages */
-            Handler handler = new Handler(this.getId());
-            handler.handle(getConnection(),getOs());
+            getHandler().handle(getConnection(),getOs());
         
         } catch (Exception e) {
             e.printStackTrace();

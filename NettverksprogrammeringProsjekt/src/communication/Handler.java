@@ -42,4 +42,9 @@ public class Handler {
             }
         }
     }
+    
+    public byte[] close() {
+         MessageHandler handler = new MessageHandler();
+         return handler.getM().createCloseMessage();
+    }
 }

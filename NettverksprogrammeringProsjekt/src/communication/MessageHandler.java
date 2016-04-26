@@ -54,7 +54,7 @@ public class MessageHandler {
                 break;
                 
             case 1 : // text
-                
+                System.out.println("text frame: ");
                 byte[] raw = decodeTextFrame(is);
                 byte[] message = m.createMessage(raw);
                 //os.write(message);

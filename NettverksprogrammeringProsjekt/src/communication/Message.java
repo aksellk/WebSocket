@@ -45,12 +45,12 @@ public class Message {
         return message;
     }
     
-    /*
+    
     public byte[] createCloseMessage() {
         byte[] close = new byte[1];
         int code = 1001;
         close[0] = (byte) code;
         return close;
-    }*/
+    }
     
 }
