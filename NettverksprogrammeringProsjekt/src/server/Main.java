@@ -11,10 +11,12 @@ import java.util.ArrayList;
 public class Main {
     
     public static ArrayList<ServerThread> list;
+    public static ArrayList<ServerThread> trash;
     
     public static void main(String[] args) throws Exception {
         try(ServerSocket ss = new ServerSocket(80)) {
             list = new ArrayList<ServerThread>();
+            trash = new ArrayList<ServerThread>();
             boolean run = true;
             try {               
             
@@ -32,6 +34,9 @@ public class Main {
                 for (ServerThread t : list) {
                     t.join();
                 }
+                for (ServerThread t : trash) {
+                    t.join();
+                }
             }
         }
     }
@@ -44,7 +49,11 @@ public class Main {
     
     public synchronized void removeThread(long thread_id) {
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getId() == thread_id) list.remove(i);
+            if (list.get(i).getId() == thread_id) {
+                list.get(i).close(); // lukker alle forbindelser
+                trash.add(list.get(i)); // legger til i søppel
+                list.remove(i); // fjerner fra aktive tråder
+            }
         }
     }
     
