@@ -86,26 +86,6 @@ public class ServerThread extends Thread {
         
     }
     
-    public void OnMessage(byte[] message) {
-        try {
-            getOs().write(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-    }
-    
-    public void OnClose() {
-        try {
-            byte[] close = getHandler().close();
-            getOs().write(close);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        
-    }
-    
-    
     public void handle() throws Exception {
         try {
             /* open connections */
@@ -123,6 +103,25 @@ public class ServerThread extends Thread {
              /* close connections */
             close();
         }
+    }
+    
+    public void OnMessage(byte[] message) {
+        try {
+            getOs().write(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+    }
+    
+    public void OnClose() {
+        try {
+            byte[] close = getHandler().close();
+            getOs().write(close);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        
     }
 
      public void open() {

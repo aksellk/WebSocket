@@ -11,9 +11,21 @@ import server.Main;
 public class Handler {
     
     private long id;
+    private MessageHandler handler;
+    private Main main;
     
     public Handler(long id) {
         this.id = id;
+        this.handler = new MessageHandler();
+        this.main = new Main();
+    }
+
+    public Main getMain() {
+        return main;
+    }
+
+    public MessageHandler getHandler() {
+        return handler;
     }
 
     public long getId() {
@@ -23,20 +35,19 @@ public class Handler {
     public void handle(Socket connection,OutputStream os) throws Exception {    
         
         try(InputStream is = connection.getInputStream()) {  
-            MessageHandler handler = new MessageHandler();
-            Main main = new Main();
+
             boolean conn = true;
             //os.write(handler.getM().createPing());
             //handler.decodeMessage(is, os);
             while (conn) {
-                 conn = handler.decodeMessage(is,os);
-                 byte[] message = handler.getMessage();
+                 conn = getHandler().decodeMessage(is,os);
+                 byte[] message = getHandler().getMessage();
                  if (!conn) {
-                     main.removeThread(getId());
+                     getMain().removeThread(getId());
                  }
                  if (message != null) {
-                     handler.setMessage(null);
-                     main.OnMessage(message); 
+                     getHandler().setMessage(null);
+                     getMain().OnMessage(message); 
                  }
                  
             }
