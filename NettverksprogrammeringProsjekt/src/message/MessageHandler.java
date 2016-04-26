@@ -119,22 +119,33 @@ public class MessageHandler {
     /**
      * Decodes the the frame recieved from the client except the opcode and FIN-flag which is already decoded.
      * Finds the length of the payload and unmasks the payload
+     * 
+     * If the length of the payload is 125 or less; the last bytes is the payload
+     * 
+     * If the length of the payload is 126; the following two bytes represent 
+     * the length as an 16-bit unsigned integer
+     * 
+     * If the length of the payload is 127; the following 8 bytes represent 
+     * the length as an 64-bit unsinged integer (this case is not handled)
+     * 
      * @param is InputStream which contains the message from the client
      * @return a byte-array containing the payload
      * @throws IOException 
      */
     public byte[] decodeTextFrame(InputStream is) throws IOException  {
         byte[] b2 = new byte[1];
-        is.read(b2);
+        is.read(b2); 
         
         byte secondbyte = b2[0];
-        long length = secondbyte & 127;
+        long length = secondbyte & 127; // the length-property
         int indexFirstMask = 2; // normal case
         
         if (length == 126) { // 2 next bytes is 16bit unsigned int
+            System.out.println("lengde 16bit unsigned int");
             indexFirstMask = 4;
             byte[] b3 = new byte[2];
             is.read(b3);
+            /* turning the two bytes into a long: */
             ByteBuffer buffer = ByteBuffer.wrap(b3);
             length = buffer.getShort();
             System.out.println("length: " + length);
@@ -143,6 +154,7 @@ public class MessageHandler {
             indexFirstMask = 10; 
             byte[] b3 = new byte[8];
             is.read(b3);
+            /* Turning the eight bytes into a long:*/
             ByteBuffer buffer = ByteBuffer.wrap(b3);
             length = buffer.getShort();
         }
