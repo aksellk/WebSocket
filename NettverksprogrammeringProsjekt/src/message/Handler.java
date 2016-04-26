@@ -32,7 +32,7 @@ public class Handler {
         return id;
     }
     
-    public void handle(Socket connection,OutputStream os) throws Exception {    
+    public void handle(Socket connection) throws Exception {    
         
         try(InputStream is = connection.getInputStream()) {  
 
@@ -40,11 +40,11 @@ public class Handler {
             //os.write(getHandler().getM().createPing()); // sends PING to client
             //getHandler().decodeMessage(is, os); // recieve and interpret PONG from client
             while (conn) {
-                 conn = getHandler().decodeMessage(is,os);
+                 conn = getHandler().decodeMessage(is);
                  byte[] message = getHandler().getMessage();
-                 if (!conn) {
-                     getMain().removeThread(getId());
-                 }
+                 
+                 if (!conn) getMain().removeThread(getId());
+  
                  if (message != null) {
                      getHandler().setMessage(null);
                      getMain().OnMessage(message); 

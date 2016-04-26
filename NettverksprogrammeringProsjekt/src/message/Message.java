@@ -54,7 +54,6 @@ public class Message {
     
     public byte[] createPing() {
         byte[] ping = new byte[2];
-        //ping[0] = 0x9;
         ping[0] = FIN_PING;
         ping[1] = 0;
         return ping;

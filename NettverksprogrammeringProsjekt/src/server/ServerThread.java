@@ -79,30 +79,31 @@ public class ServerThread extends Thread {
     @Override
     public void run() {
         try {
+            /* open connections */
+            open();
+            /* Handle Communication */
             handle();
+            
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            /* close connections */
+            close();
         }
         
     }
     
     public void handle() throws Exception {
         try {
-            /* open connections */
-            open();
-
             /* Handshake */
-            getHshandler().handle(getBr(), getPw());       
+            getHshandler().handle(getBr(), getPw());   
 
             /* Handle messages */
-            getHandler().handle(getConnection(),getOs());
+            getHandler().handle(getConnection());
         
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-             /* close connections */
-            close();
-        }
+        } 
     }
     
     public void OnMessage(byte[] message) {
@@ -119,6 +120,8 @@ public class ServerThread extends Thread {
             getOs().write(close);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            close();
         }
         
         
@@ -133,14 +136,16 @@ public class ServerThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }  
-    }        
+    }
+     
+   
     
     public void close() {
         try {
-            getIsr().close();
-            getOs().close();
             getPw().close();
             getBr().close();
+            getIsr().close();
+            getOs().close();
             getIsr().close();
         } catch (IOException e) {
             e.printStackTrace();
