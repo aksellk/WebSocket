@@ -9,6 +9,12 @@ import java.nio.ByteBuffer;
  */
 public class MessageHandler {
     
+    /* opcodes: */
+    private static final int CONTINUATION_FRAME = 0;
+    private static final int TEXT_FRAME = 1;
+    private static final int CLOSE = 8;
+    private static final int PONG = 10;
+    
     private byte[] message = null;
     private Message m;
     
@@ -48,12 +54,12 @@ public class MessageHandler {
     public boolean handleMessage(InputStream is, OutputStream os,int opcode) throws IOException {
         boolean conn = true;
         switch(opcode){
-            case 0 : // continuation frame
+            case CONTINUATION_FRAME : // continuation frame
                 System.out.println("continuation frame");
                 conn = true;
                 break;
                 
-            case 1 : // text
+            case TEXT_FRAME : // text
                 System.out.println("text frame: ");
                 byte[] raw = decodeTextFrame(is);
                 byte[] message = m.createMessage(raw);
@@ -62,7 +68,7 @@ public class MessageHandler {
                 setMessage(message);
                 
                 break;
-            case 8 : // close
+            case CLOSE : // close
                 is.close();
                 //byte[] close = createCloseMessage();
                 //os.write(close);
@@ -70,7 +76,7 @@ public class MessageHandler {
                 conn = false;
                 break;
             
-            case 10 : // recieves pong
+            case PONG : // recieves pong
                 System.out.println("PONG!");
                 break;
             default :
