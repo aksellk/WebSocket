@@ -7,7 +7,8 @@ import java.io.*;
 import java.net.Socket;
 
 /**
- *
+ * Thread class which handles communication with one and only one client
+ * 
  * @author Aksel
  */
 public class ServerThread extends Thread {
@@ -75,7 +76,11 @@ public class ServerThread extends Thread {
     }
     
     
-    
+    /**
+     * Initializes IO-objects used to communicate with the client
+     * Communicates with the client
+     * Closes streams used to communicate with the client
+     */
     @Override
     public void run() {
         try {
@@ -93,7 +98,12 @@ public class ServerThread extends Thread {
         
     }
     
-    public void handle() throws Exception {
+    /**
+     * Handles communication with the client
+     * Executes the opening handshake
+     * Communicates with the client
+     */
+    public void handle() {
         try {
             /* Handshake */
             getHshandler().handle(getBr(), getPw());   
@@ -106,6 +116,11 @@ public class ServerThread extends Thread {
         } 
     }
     
+    /**
+     * writes the given message to the client
+     * 
+     * @param message the message which will get sent
+     */
     public void OnMessage(byte[] message) {
         try {
             getOs().write(message);
@@ -114,9 +129,12 @@ public class ServerThread extends Thread {
         } 
     }
     
+    /**
+     * writes a close message and sends it to the client
+     */
     public void OnClose() {
         try {
-            byte[] close = getHandler().close();
+            byte[] close = getHandler().close(); // the close-message
             getOs().write(close);
         } catch (IOException e) {
             e.printStackTrace();
@@ -126,7 +144,10 @@ public class ServerThread extends Thread {
         
         
     }
-
+    
+     /**
+      * Initializes IO-objects used for communication with the client
+      */
      public void open() {
         try {
             setIsr(new InputStreamReader(getConnection().getInputStream()));
@@ -139,7 +160,9 @@ public class ServerThread extends Thread {
     }
      
    
-    
+    /**
+     * Closes streams used to communicate with the client
+     */
     public void close() {
         try {
             getPw().close();
