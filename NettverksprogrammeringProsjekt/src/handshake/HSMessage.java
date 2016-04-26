@@ -32,10 +32,10 @@ public class HSMessage {
         String key = "";
         while ((s = getBr().readLine()) != null && (!(s = getBr().readLine()).equals(""))) {
             if (s.contains(seq)) {
-                key = s;
+                key = getKey(s);
             }
         }
-        return getKey(key);
+        return key;
     }
     
     /**

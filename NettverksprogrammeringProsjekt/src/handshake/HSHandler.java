@@ -18,9 +18,9 @@ public class HSHandler {
      */
     public void handle(BufferedReader br, PrintWriter pw) {
         try {
-            HSMessage hshandler = new HSMessage(br);
+            HSMessage hsmessage = new HSMessage(br);
             /* Finds the WebSocket key from the clients GET-request: */
-            String key = hshandler.findKey();
+            String key = hsmessage.findKey();
             System.out.println(key);
             /* Encodes the WebSocket key using base64 and SHA-1: */
             Encoder encoder = new Encoder();

@@ -55,7 +55,7 @@ public class MessageHandler {
         int FIN = fin;
         byte opcode = (byte) (firstByte & 0xF); // retrieve the opcode which is the four LSBs
         int oc = opcode;
-        return handleMessage(is,oc);     
+        return handleMessage(is,oc,FIN);     
     }
     
     /**
@@ -77,10 +77,11 @@ public class MessageHandler {
      * 
      * @param is InputStream which contains the message from the client
      * @param opcode the opcode which speciefies the type of message from the client
+     * @param FIN the FIN-flag
      * @return false if a close-frame is recieved, otherwise true
      * @throws IOException if an IO-error occurs
      */
-    public boolean handleMessage(InputStream is,int opcode) throws IOException {
+    public boolean handleMessage(InputStream is,int opcode,int FIN) throws IOException {
         byte[] raw = null;
         byte[] message = null;
         boolean conn = true;
@@ -88,7 +89,8 @@ public class MessageHandler {
             case CONTINUATION_FRAME : // continuation frame
                 System.out.println("continuation frame recieved");
                 raw = decodeTextFrame(is); // the payload
-                message = m.createMessage(raw,false); // creates a new message to the client with continuation
+                if (FIN == 0) message = m.createMessage(raw,false); // creates a new message to the client with continuation without the FIN-flag set
+                else if (FIN == 1) message = m.createMessage(raw,true); // creates a new message to the client with continuation with the FIN-flag set
                 setMessage(message); // sets the message in the message field
                 break;
                 

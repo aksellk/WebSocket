@@ -2,7 +2,7 @@ package message;
 
 import java.io.*;
 import java.net.Socket;
-import server.Main;
+import thread.Main;
 
 /**
  * Handles communication with the client

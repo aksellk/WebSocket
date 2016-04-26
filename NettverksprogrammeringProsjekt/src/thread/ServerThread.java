@@ -1,4 +1,4 @@
-package server;
+package thread;
 
 import message.Handler;
 import handshake.HSHandler;
