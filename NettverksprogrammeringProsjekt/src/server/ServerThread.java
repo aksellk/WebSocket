@@ -1,6 +1,6 @@
 package server;
 
-import communication.Handler;
+import message.Handler;
 import handshake.HSHandler;
 import java.io.BufferedReader;
 import java.io.*;
