@@ -18,13 +18,13 @@ git clone https://github.com/aksellk/WebSocket_klient
 ```
 
 ### Kjøring av prosjektet
-1. naviger til mappen server/WebSocket\NettverksprogrammeringProsjekt\dist
+1. naviger til mappen server/WebSocket\server\dist
 2. åpne kommandovindu i denne mappen
 3. start tjener ved:  
 ```sh 
 java -jar WebSocket.jar
 ``` 
-4. naviger til mappen client/WebSocket_klient\websocket
+4. naviger til mappen client\websocket
 5.  start klient ved:
 ```sh
 nodemon --harmony server/server.js
@@ -37,7 +37,7 @@ Ctrl + C
 
 ### javadoc
 Dokumentasjonen av klassene og metodene i prosjektet finnes på javadocformat:
-* Naviger til mappen WebSocket\NettverksprogrammeringProsjekt\dist
+* Naviger til mappen WebSocket\server\dist
 * Åpne filen index.html
 
 ### Oppbygging
