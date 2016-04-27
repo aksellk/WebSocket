@@ -11,8 +11,8 @@ public class Message {
     private final byte FIN_TEXT = (byte) 0x81;         // 10000001 FIN and TEXT-FRAME
     private final byte FIN_CLOSE = (byte) 0x88;        // 10001000 FIN and CLOSE-FRAME
     private final byte FIN_PING = (byte) 0x89;         // 10001001 FIN and PING-FRAME
-    private final byte CONTINUATION = (byte) 0x0;        // 00000000 NOT FIN and CONTINUATION-FRAME
-    private final byte TEXT = (byte) 0x1;                // 00000001 NOT FIN and TEXT-FRAME
+    private final byte CONTINUATION = (byte) 0x0;      // 00000000 NOT FIN and CONTINUATION-FRAME
+    private final byte TEXT = (byte) 0x1;              // 00000001 NOT FIN and TEXT-FRAME
 
     /**
      * Creates a new message with FIN-flag, opcode, length and payload:
