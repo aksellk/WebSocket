@@ -53,6 +53,7 @@ public class MessageHandler {
         byte firstByte = b1[0];
         byte fin = (byte) ((byte) (firstByte >> 7) & 0x1); // retrieve the FIN-flag which is the MSB
         int FIN = fin;
+        System.out.println("FIN: " + FIN);
         byte opcode = (byte) (firstByte & 0xF); // retrieve the opcode which is the four LSBs
         int oc = opcode;
         return handleMessage(is,oc,FIN);     
@@ -89,15 +90,14 @@ public class MessageHandler {
             case CONTINUATION_FRAME : // continuation frame
                 System.out.println("continuation frame recieved");
                 raw = decodeTextFrame(is); // the payload
-                if (FIN == 0) message = m.createMessage(raw,false); // creates a new message to the client with continuation without the FIN-flag set
-                else if (FIN == 1) message = m.createMessage(raw,true); // creates a new message to the client with continuation with the FIN-flag set
+                message = m.createMessage(raw,FIN,true); // creates a new message to the client with continuation 
                 setMessage(message); // sets the message in the message field
                 break;
                 
             case TEXT_FRAME : // text
                 System.out.println("text frame recieved");
                 raw = decodeTextFrame(is); // the payload
-                message = m.createMessage(raw,true); // creates a new message to the client without continuation
+                message = m.createMessage(raw,FIN,false); // creates a new message to the client without continuation
                 setMessage(message); // sets the message in the message field   
                 break;
             case CLOSE : // close

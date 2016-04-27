@@ -7,10 +7,12 @@ package message;
  */
 public class Message {
     /* The different first byte of the message */
-    private final byte FIN_TEXT = (byte) 0x81;   // 10000001 FIN and TEXT-FRAME
-    private final byte FIN_CLOSE = (byte) 0x88;  // 10001000 FIN and CLOSE-FRAME
-    private final byte FIN_PING = (byte) 0x89;   // 10001001 FIN and PING-FRAME
-    private final byte CONTINUATION = (byte) 0;  // 00000000 NOT FIN and CONTINUATION-FRAME
+    private final byte FIN_CONTINUATION = (byte) 0x80; // 10000000 FIN and CONTINUATION-FRAME 
+    private final byte FIN_TEXT = (byte) 0x81;         // 10000001 FIN and TEXT-FRAME
+    private final byte FIN_CLOSE = (byte) 0x88;        // 10001000 FIN and CLOSE-FRAME
+    private final byte FIN_PING = (byte) 0x89;         // 10001001 FIN and PING-FRAME
+    private final byte CONTINUATION = (byte) 0x0;        // 00000000 NOT FIN and CONTINUATION-FRAME
+    private final byte TEXT = (byte) 0x1;                // 00000001 NOT FIN and TEXT-FRAME
 
     /**
      * Creates a new message with FIN-flag, opcode, length and payload:
@@ -21,25 +23,40 @@ public class Message {
      * 
      * @param raw the payload
      * @param fin 
-     *      - true if the FIN-flag is set
-     *      - false if the FIN-flag is not set
+     *      - 1 if the FIN-flag is set
+     *      - 0 if the FIN-flag is not set
+     * @param cont
+     *      - true if a CONTINUATION-FRAME is going to get created
+     *      - false if a TEXT-FRAME is going to get created
      * @return the message which will get sent to the client
      */
-    public byte[] createMessage(byte[] raw, boolean fin) {
+    public byte[] createMessage(byte[] raw, int fin, boolean cont) {
         byte[] message = null;
         int indexStartRawData = -1; // before set
         
         if(raw.length <= 125) { // normal length
             message = new byte[raw.length + 2];
-            if (fin) message[0] = FIN_TEXT; // FIN-flag set and text-frame opcode
-            else message[0] = CONTINUATION; // FIN-flag not set and continuation opcode
+            if (fin == 0) { // FIN-Flag not set
+                if (cont) message[0] = TEXT; // NOT FIN and opcode TEXT-FRAME
+                else message[0] = CONTINUATION; // NOT FIN and opcode CONTINUATION-FRAME
+            } 
+            if (fin == 1) { // FIN-Flag set
+                if (cont) message[0] = FIN_CONTINUATION; // FIN and opcode CONTINUATION-FRAME
+                else message[0] = FIN_TEXT; // FIN and opcode TEXT-FRAME           
+            }
             message[1] = (byte)raw.length;  // length of the payload
             indexStartRawData = 2;
         }
         else if (raw.length >= 126 && raw.length <= 65535) { // special case 1
             message = new byte[raw.length + 4];
-            if (fin) message[0] = FIN_TEXT; // FIN-flag set and text-frame opcode
-            else message[0] = CONTINUATION; // FIN-flag not set and continuation opcode
+            if (fin == 0) { // FIN-Flag not set
+                if (cont) message[0] = TEXT; // NOT FIN and opcode TEXT-FRAME
+                else message[0] = CONTINUATION; // NOT FIN and opcode CONTINUATION-FRAME
+            } 
+            if (fin == 1) { // FIN-Flag set
+                if (cont) message[0] = FIN_CONTINUATION; // FIN and opcode CONTINUATION-FRAME
+                else message[0] = FIN_TEXT; // FIN and opcode TEXT-FRAME  
+            }
             message[1] = 126;
             /* length as 16-bit unsigned int: */
             message[2] = (byte) ((raw.length >> 8) & 255); 
