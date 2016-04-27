@@ -88,3 +88,5 @@ Det er laget tester for to metoder. I klassen Encoder testes createKey()-metoden
 
 ##### Referanser
 Fette, I. & Melnikov A. (2011) The WebSocket Protocol. https://tools.ietf.org/html/rfc6455
+http://stackoverflow.com/questions/19743851/base64-java-encode-and-decode-a-string
+http://stackoverflow.com/questions/8125507/how-can-i-send-and-receive-websocket-messages-on-the-server-side
