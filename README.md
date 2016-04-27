@@ -1,4 +1,29 @@
 # WebSocket
+
+### Kjøring av prosjektet
+1. naviger til mappen WebSocket\NettverksprogrammeringProsjekt\dist
+2. åpne kommandovindu i denne mappen
+3. start tjener ved:  
+   ```sh 
+  java -jar WebSocket.jar
+  ``` 
+4. naviger til klient
+5.  start klient ved:
+    ```sh
+    nodemon --harmony server/server.js
+    ``` 
+6. åpne nettleser og skriv inn localhost:3000
+7. avslutt klienten og tjeneren ved å bruke 
+    ```
+    Ctrl + C
+    ```
+
+### javadoc
+Dokumentasjonen av klassene og metodene i prosjektet finnes på javadocformat:
+* Naviger til mappen WebSocket\NettverksprogrammeringProsjekt\dist\
+* Åpne filen index.html
+
+### Oppbygging
 Denne java-applikasjonen er en WebSocket-tjener som håndterer kommunikasjon med WebSocket-klienter ved å bruke WebSocket-protokollen som er spesifisert i .
 
 Prosjektet er delt opp i tre pakker der klassene hører logisk sammen:
