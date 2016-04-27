@@ -4,23 +4,23 @@
 1. naviger til mappen WebSocket\NettverksprogrammeringProsjekt\dist
 2. åpne kommandovindu i denne mappen
 3. start tjener ved:  
-   ```sh 
-  java -jar WebSocket.jar
-  ``` 
-4. naviger til klient
+```sh 
+java -jar WebSocket.jar
+``` 
+4. naviger til mappen WebSocket_klient\websocket
 5.  start klient ved:
-    ```sh
-    nodemon --harmony server/server.js
-    ``` 
+```sh
+nodemon --harmony server/server.js
+``` 
 6. åpne nettleser og skriv inn localhost:3000
 7. avslutt klienten og tjeneren ved å bruke 
-    ```
-    Ctrl + C
-    ```
+```
+Ctrl + C
+```
 
 ### javadoc
 Dokumentasjonen av klassene og metodene i prosjektet finnes på javadocformat:
-* Naviger til mappen WebSocket\NettverksprogrammeringProsjekt\dist\
+* Naviger til mappen WebSocket\NettverksprogrammeringProsjekt\dist
 * Åpne filen index.html
 
 ### Oppbygging
