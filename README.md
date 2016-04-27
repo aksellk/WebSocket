@@ -47,7 +47,9 @@ Når en tråd får en melding fra en klient sendes den ut til alle andre aktive 
 
 Når det gjelder overføring av informasjon ved WebSocket-protokollen er det tatt hensyn for tolking av FIN-flag, opcodene TEXT_FRAME, CONTINUATION_FRAME, CLOSE og PONG, samt lengder av to forskjellige størrelser: hvis nyttelasten er 125 byte eller mindre og hvis nyttelasten er mellom 126 byte og 2^16 byte. I tillegg til å overføre vanlige text-frames når meldinger overføres sendes det ut melding til klienten når tjeneren tar initiativ til å avslutte forbindelsen.
 
-Prosjektet er delt opp i tre pakker der klassene hører logisk sammen:
+Prosjektet bruker en enkel WebSocket-klient laget i javascript og html for å teste WebSocket-tjeneren som er kodet i java. Klienten sender WebSocket-meldinger til tjeneren via en html-side med et tekstfelt for å skrive melding og en knapp for å sende. Nyttelasten i meldingene som sendes over WebSocket protokollen består av JSON-data. Flere klienter kan kobles til tjeneren samtidig. Dette kan testes ved å åpne flere nettleservindu og sende meldinger.
+
+WebSocket-tjeneren er delt opp i tre pakker der klassene hører logisk sammen:
 * thread: Her ligger ansvaret for kjøring av tjeneren ved hjelp av tråder og selve overføringen av informasjon fra og til klient.
 * handshake: Her ligger ansvaret for å utføre handshake.
 * message: Her ligger ansvaret for å tolke WebSocket meldinger fra klient og å lage WebSocket-meldinger som skal sendes til klient.
