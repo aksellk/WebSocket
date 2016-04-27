@@ -1,7 +1,9 @@
 # WebSocket
-Laget av Aksel Langø Karlsen 
+Laget av Aksel Langø Karlsen.
 
-Dette prosjektet er en del av faget TDAT2004-A ved NTNU IIE våren 2016
+Dette prosjektet er en del av faget TDAT2004-A ved NTNU IIE våren 2016.
+
+Prosjektet er testet ved å bruke operativsystemet Windows 7 og med nettleseren Google Chrome.
 
 ### Filer
 * I mappen server ligger selve prosjektet med WebSocket tjeneren, javadoc, og kjørbar jar-fil
