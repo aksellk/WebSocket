@@ -1,13 +1,13 @@
 # WebSocket
 
 ### Kjøring av prosjektet
-1. naviger til mappen WebSocket\NettverksprogrammeringProsjekt\dist
+1. naviger til mappen server/WebSocket\NettverksprogrammeringProsjekt\dist
 2. åpne kommandovindu i denne mappen
 3. start tjener ved:  
 ```sh 
 java -jar WebSocket.jar
 ``` 
-4. naviger til mappen WebSocket_klient\websocket
+4. naviger til mappen client/WebSocket_klient\websocket
 5.  start klient ved:
 ```sh
 nodemon --harmony server/server.js
@@ -24,12 +24,18 @@ Dokumentasjonen av klassene og metodene i prosjektet finnes på javadocformat:
 * Åpne filen index.html
 
 ### Oppbygging
-Denne java-applikasjonen er en WebSocket-tjener som håndterer kommunikasjon med WebSocket-klienter ved å bruke WebSocket-protokollen som er spesifisert i (Fette & Melnikov 2011). Tjeneren støtter kommunikasjon med flere klienter samtidig ved å bruke en tråd for hver klient. For kommunikasjon med klienter gjennomføres alltid først en åpnings-handshake der det utveklses nøkler. Deretter overføres informasjon ved å bruke WebSocket-protokollen.
+Denne java-applikasjonen er en WebSocket-tjener som håndterer kommunikasjon med WebSocket-klienter ved å bruke WebSocket-protokollen som er spesifisert i (Fette & Melnikov 2011). Tjeneren støtter kommunikasjon med flere klienter samtidig ved å bruke en tråd for hver klient. For kommunikasjon med klienter gjennomføres alltid først en åpnings-handshake der det utveklses nøkler. Deretter overføres informasjon ved å bruke WebSocket-protokollen. 
+
+Når en tråd får en melding fra en klient sendes den ut til alle andre aktive tråder som sender videre til klienten de håndterer.
+
+Når det gjelder overføring av informasjon ved WebSocket-protokollen er det tatt hensyn for tolking av FIN-flag, opcodene TEXT_FRAME, CONTINUATION_FRAME, CLOSE og PONG, samt lengder av to forskjellige størrelser: hvis nyttelasten er 125 byte eller mindre og hvis nyttelasten er mellom 126 byte og 2^16 byte. I tillegg til å overføre vanlige text-frames når meldinger overføres sendes det ut melding til klienten når tjeneren tar initiativ til å avslutte forbindelsen.
 
 Prosjektet er delt opp i tre pakker der klassene hører logisk sammen:
 * thread: Her ligger ansvaret for kjøring av tjeneren ved hjelp av tråder og selve overføringen av informasjon fra og til klient.
 * handshake: Her ligger ansvaret for å utføre handshake.
 * message: Her ligger ansvaret for å tolke WebSocket meldinger fra klient og å lage WebSocket-meldinger som skal sendes til klient.
+
+I tillegg er det laget en egen pakke for test-klasser
 
 ##### Pakkene:
 ###### thread
@@ -59,5 +65,9 @@ I klassen Message er det metoder for å produsere byte[] som inneholder respons-
 createMessage() lager en respons når enten en TEXT-FRAME-opcode og en CONTINUATION-FRAME-opcode er mottat. Om det er kontinuerlig melding eller en enkel tekst-melding avgjøres av en boolean "cont" i parameteret. En int med navn "FIN" i parameteret brukes til å avgjøre om det skal sendes melding met FIN-flagget satt i første bit. Det er også håndtert for ulik lengde. Hvis lengden er 125 eller mindre settes byte 2 til å være nyttelastens lengde. Hvis lengden er større eller lik 126 og mindre eller lik 2^16 er byte 2 satt til 129 og de to påfølgende bytene lengden på 16-bits unsigned integer format. 
 
 Metodene createCloseMessage() og createPing() lager meldinger for ping og lukking av forbindelse, med opcodene satt for de respektive operasjonene og lengde 0.
+
+###### Test Packages
+Det er laget tester for to metoder. I klassen Encoder testes createKey()-metoden som enkoder nøkkelen fra klienten. Det testes på at nøkkelen er korrekt enkodet med en dummy-enkodet nøkkel. I Main-klassen testes metoden removeThread som sørger for å fjerne en tråd fra listen med aktive tråder etter at en klient har tatt initiativ for nedkobling, lukker IO-forbindelsene til denne tråden, og legger den i søppel-lista. Her testes det på fjerning fra aktiv liste og å legge tråden i søppellisten.
+
 ##### Referanser
 Fette, I. & Melnikov A. (2011) The WebSocket Protocol. https://tools.ietf.org/html/rfc6455
