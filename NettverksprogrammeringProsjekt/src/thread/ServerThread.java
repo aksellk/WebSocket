@@ -140,8 +140,16 @@ public class ServerThread extends Thread {
             e.printStackTrace();
         } finally {
             close();
+        } 
+    }
+    
+    public void OnPing() {
+        try {
+            byte[] ping = getHandler().ping(); // ping-message
+            getOs().write(ping);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        
         
     }
     

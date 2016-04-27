@@ -50,8 +50,7 @@ public class Handler {
         try(InputStream is = connection.getInputStream()) {  
 
             boolean conn = true;
-            //os.write(getHandler().getM().createPing()); // sends PING to client
-            //getHandler().decodeMessage(is, os); // recieve and interpret PONG from client
+            //ping();
             while (conn) {
                  conn = getHandler().decodeMessage(is);
                  byte[] message = getHandler().getMessage();
@@ -67,12 +66,21 @@ public class Handler {
         }
     }
     
+    
     /**
-     * Creates a close-message which for the client when the server takes initiative to disconnect
+     * Creates a close-message for the client when the server takes initiative to disconnect
      * @return the close-frame
      */
     public byte[] close() {
-         MessageHandler handler = new MessageHandler();
-         return handler.getM().createCloseMessage();
+         return getHandler().getM().createCloseMessage();
     }
+    
+    /**
+     * Creates a ping-message for the client
+     * @return byte[] with the ping
+     */
+    public byte[] ping() {
+        return getHandler().getM().createPing();
+    }
+    
 }
