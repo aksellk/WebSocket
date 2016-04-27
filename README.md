@@ -24,9 +24,13 @@ Dokumentasjonen av klassene og metodene i prosjektet finnes på javadocformat:
 * Åpne filen index.html
 
 ### Oppbygging
-Denne java-applikasjonen er en WebSocket-tjener som håndterer kommunikasjon med WebSocket-klienter ved å bruke WebSocket-protokollen som er spesifisert i .
+Denne java-applikasjonen er en WebSocket-tjener som håndterer kommunikasjon med WebSocket-klienter ved å bruke WebSocket-protokollen som er spesifisert i (Fette & Melnikov 2011). Tjeneren støtter kommunikasjon med flere klienter samtidig ved å bruke en tråd for hver klient. For kommunikasjon med klienter gjennomføres alltid først en åpnings-handshake der det utveklses nøkler. Deretter overføres informasjon ved å bruke WebSocket-protokollen.
 
 Prosjektet er delt opp i tre pakker der klassene hører logisk sammen:
+* thread: Her ligger ansvaret for kjøring av tjeneren ved hjelp av tråder og selve overføringen av informasjon fra og til klient.
+* handshake: Her ligger ansvaret for å utføre handshake.
+* message: Her ligger ansvaret for å tolke WebSocket meldinger fra klient og å lage WebSocket-meldinger som skal sendes til klient.
+
 ##### Pakkene:
 ###### thread
 Denne pakken inneholder klassene Main og ServerThread. Main klassen inneholder main()-metoden som starter applikasjonen. I Main-klassen opprettes tråder for hver klient, ved å opprette ServerThread-objekter som er subklasser til Thread. I Main-klassen ligger også logikken for synkronisering av tråder når en melding skal sendes ut til alle trådene. I tillegg er det her logikk for å fjerne en tråd når en klient kobler seg fra.
