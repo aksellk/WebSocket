@@ -1,4 +1,19 @@
 # WebSocket
+Laget av Aksel Langø Karlsen 
+
+Dette prosjektet er en del av faget TDAT2004-A ved NTNU IIE våren 2016
+
+### Filer
+* I mappen server ligger selve prosjektet med WebSocket tjeneren, javadoc, og kjørbar jar-fil
+* I mappen client ligger WebSocket-klienten som er brukt for å teste serveren
+* WebSocket-serveren kan også klones fra github om det er å foretrekke:
+```sh
+git clone https://github.com/aksellk/WebSocket.git
+``` 
+* WebSocket klienten kan også klones fra github om det er å foretrekke:
+```sh
+git clone https://github.com/aksellk/WebSocket_klient
+```
 
 ### Kjøring av prosjektet
 1. naviger til mappen server/WebSocket\NettverksprogrammeringProsjekt\dist
