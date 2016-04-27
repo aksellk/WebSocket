@@ -14,6 +14,28 @@ public class Main {
     public static ArrayList<ServerThread> list;  // threads handling active clients
     public static ArrayList<ServerThread> trash; // threads that were handling disconected clients
     
+    public Main() {
+        
+    }
+
+    public ArrayList<ServerThread> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<ServerThread> list) {
+        Main.list = list;
+    }
+
+    public ArrayList<ServerThread> getTrash() {
+        return trash;
+    }
+
+    public void setTrash(ArrayList<ServerThread> trash) {
+        Main.trash = trash;
+    }
+    
+    
+    
     /**
      * Initializes a ServerSocket on port 80
      * Creates one thread for each client 

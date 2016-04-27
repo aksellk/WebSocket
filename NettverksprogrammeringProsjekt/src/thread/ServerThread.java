@@ -172,12 +172,11 @@ public class ServerThread extends Thread {
      * Closes streams used to communicate with the client
      */
     public void close() {
-        try {
+        try {     
             getPw().close();
             getBr().close();
             getIsr().close();
             getOs().close();
-            getIsr().close();
         } catch (IOException e) {
             e.printStackTrace();
         }   
